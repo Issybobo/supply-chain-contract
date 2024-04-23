@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.19;
+pragma solidity 0.8.18;
 
 contract Tracking{
 
@@ -122,7 +122,31 @@ contract Tracking{
 
   }
 
+  function getShipment(address _sender, uint256 _index) public view returns (address, address, uint256,
+   uint256, uint256, ShipmentStatus, bool) {
+
+    Shipment memory shipment = shipments[_sender] [_index];
+
+    return (shipment.sender, shipment.receiver, shipment.pickupTime, shipment.deliveryTime, shipment.distance,
+    shipment.distance, shipment.price, shipment.status, shipment.isPaid
+    );
+
   
+
+function getShipmentsCount(address _sender) public view returns (uint256) {
+    return shipments[_sender].length;
+    
+}
+
+
+
+
+
+
+
+function getAllTransactions() public view returns (TypeShipment [] memory ) {
+    return typeShipments
+}
 
 
 }
