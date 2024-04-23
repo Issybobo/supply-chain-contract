@@ -92,7 +92,36 @@ contract Tracking{
         emit ShipmentInTransit(_sender, _receiver, shipment.pickupTime);
     }
 
- 
+  function completeShipment (address _sender, address _receiver, uint256 _index) public {
+    // we use storage because we are storing the date in the stage variable
+    Shipment storage shipment = shipments[_sender][_index];
+    TypeShipment storage typeShipments = typeShipments[_index];
+
+    require(shipment.receiver == _receiver, "Invalid receiver");
+    
+    // condition to check for shipment status
+    require(shipment.status == ShipmentStatus.IN_TRANSIT, "Shipment not in transit");
+
+    require(!shipment.isPaid, "Shipment already paid");
+
+    shipment.status = ShipmentStatus.DELIVERED;
+    typeShipment.status = Shipment.DELIVERED;
+    typeShipment.deliveryTime = block.timestamp;
+    shipment.deliveryTime = block.timestamp;
+    
+    // after the delivery is succesful
+    uint256 amount = shipment.price;
+
+    payable(shipment.sender).transfer(amount);
+
+    shipment.isPaid = true;
+    typeShipment.isPaid = true;
+
+    emit ShipmentDelivered(_sender, _receiver, shipment.deliveryTime);
+    emit ShipmentPaid(_sender, _receiver, _amount);
+
+  }
+
   
 
 
